@@ -10,6 +10,14 @@ yarn install
 yarn serve
 ```
 
+### включить дебаг кода
+
+в консоли браузера набрать и перезагрузить страницу
+```
+localStorage.developmentMode = true
+```
+
+
 ### Compiles and minifies for production
 ```
 yarn build
