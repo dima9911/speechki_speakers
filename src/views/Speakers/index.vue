@@ -120,13 +120,6 @@ export default {
     this.getData();
   },
   methods: {
-    // fetchLangs(value, callback) {
-    //     callback(this.langsList.filter(lang => {
-    //     if (lang.indexOf(value) !== -1) {
-    //       return true;
-    //     }
-    //   }))
-    // },
     filterOption(input, option) {
       return (
         option.componentOptions.children[0].text

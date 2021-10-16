@@ -106,7 +106,7 @@ export default {
     };
   },
   created() {
-    // this.$accessModule("speaker_" + this.speaker.id, this);
+    this.$accessModule("speaker_" + this.speaker.id, this);
     this.$root.$on("stopAnotherSpeakers", this.onStopWhenAnotherPlay);
   },
   beforeDestroy() {
