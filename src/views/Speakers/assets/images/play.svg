@@ -1,0 +1,15 @@
+<svg
+          data-type="play"
+          class="play"
+          width="30"
+          height="52"
+          viewBox="0 0 30 52"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            data-type="play"
+            d="M30 26L0 51.9808L0 0.0192375L30 26Z"
+            fill="#FF6B06"
+          ></path>
+        </svg>

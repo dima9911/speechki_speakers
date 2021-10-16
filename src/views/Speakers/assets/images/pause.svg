@@ -1,0 +1,24 @@
+ <svg
+          data-type="pause"
+          width="20"
+          height="44"
+          viewBox="0 0 20 44"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            data-type="pause"
+            width="7"
+            height="44"
+            rx="3.5"
+            fill="#FF6B06"
+          ></rect>
+          <rect
+            data-type="pause"
+            x="13"
+            width="7"
+            height="44"
+            rx="3.5"
+            fill="#FF6B06"
+          ></rect>
+        </svg>
