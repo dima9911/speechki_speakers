@@ -2,81 +2,89 @@
   <div
     class="voice-card"
     data-value="English (US)"
-    @mouseleave="!player.play ? (player.show = false) : false"
     :style="{
       background: linearGradient,
     }"
   >
-    <img
-      src="../assets/images/audio-visualizer.svg"
-      class="audio-visualizer svg-background-item"
-    />
-    <img
-      class="svg-background-item voice-card__fill-line-one"
-      src="../assets/images/voice-card__fill-line-one.svg"
-    />
-    <img
-      class="svg-background-item voice-card__fill-line-two"
-      src="../assets/images/voice-card__fill-line-two.svg"
-    />
-
-    <div
-      class="voice-card__description"
-      v-show="!player.show"
-      @mouseover="player.show = true"
-    >
-      <div class="voice-card__name">{{ speaker.name.eng }}</div>
-      <div class="voice-card__lang">{{ speaker.language.label.eng }}</div>
+    <div class="svg-background">
+      <img
+        src="../assets/images/audio-visualizer.svg"
+        class="audio-visualizer svg-background-item"
+      />
+      <img
+        class="svg-background-item voice-card__fill-line-one"
+        src="../assets/images/voice-card__fill-line-one.svg"
+      />
+      <img
+        class="svg-background-item voice-card__fill-line-two"
+        src="../assets/images/voice-card__fill-line-two.svg"
+      />
     </div>
-
-    <div class="voice-card__player" v-show="player.show">
-      <div data-type="play-btn" class="voice-card__play-btn">
-        <audio
-          ref="audio"
-          v-once
-          :src="speaker.sample"
-          @ended="onAudioEnded"
-          preload="none"
-          data-type="audio"
-        ></audio>
-        <img
-          src="../assets/images/pause.svg"
-          class="pause"
-          v-if="player.play == true"
-          @click="pause"
-        />
-        <img
-          src="../assets/images/play.svg"
-          class="play"
-          v-else
-          @click="play"
-        />
+    <div
+      class="voice-card__inner"
+      @mouseover="player.show = true"
+      @mouseleave="player.show = false"
+    >
+      <div v-show="!player.show" class="voice-card__description">
+        <div class="voice-card__name">{{ speaker.name.eng }}</div>
+        <div class="voice-card__lang">{{ speaker.language.label.eng }}</div>
       </div>
 
-      <div
-        data-type="restart"
-        class="voice-card__reset-player"
-        @click="resetPlayer"
-      >
-        <img src="../assets/images/restart.svg" />
-      </div>
+      <div class="voice-card__player" v-show="player.show">
+        <div data-type="play-btn" class="voice-card__play-btn" @click="action">
+          <audio
+            ref="audio"
+            v-once
+            :src="speaker.sample"
+            @ended="onAudioEnded"
+            preload="none"
+            data-type="audio"
+          ></audio>
+          <transition name="fade" tag="img" :duration="100">
+            <img
+              key="pause"
+              src="../assets/images/pause.svg"
+              class="pause"
+              v-if="player.play == true"
+            />
+            <img
+              key="play"
+              src="../assets/images/play.svg"
+              class="play"
+              v-else
+            />
+          </transition>
+        </div>
 
-      <a-select
-        v-model="player.speed"
-        size="small"
-        class="speed-select"
-        :showArrow="false"
-        @change="onChangeSpeed"
-        dropdownClassName="speed-select__dropdown"
-      >
-        <a-select-option
-          v-for="speed in speedsList"
-          :key="speed.value"
-          :value="speed.value"
+        <div
+          data-type="restart"
+          class="voice-card__reset-player"
+          @click="resetPlayer"
         >
-          {{ speed.title }}
-        </a-select-option>
-      </a-select>
+          <img src="../assets/images/restart.svg" />
+        </div>
+
+        <a-select
+          v-model="player.speed"
+          size="small"
+          ref="speedSelect"
+          placement="top"
+          class="speed-select"
+          :getPopupContainer="() => $refs.speedSelectDropdown"
+          :showArrow="false"
+          @change="onChangeSpeed"
+          dropdownClassName="speed-select__dropdown"
+        >
+          <a-select-option
+            v-for="speed in speedsList"
+            :key="speed.value"
+            :value="speed.value"
+          >
+            {{ speed.title }}
+          </a-select-option>
+        </a-select>
+        <div ref="speedSelectDropdown"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -124,10 +132,12 @@ export default {
     },
   },
   methods: {
+    action() {
+      this.player.play ? this.pause() : this.play();
+    },
     onStopWhenAnotherPlay(speaker_id) {
       if (speaker_id != this.speaker.id) {
         this.pause();
-        this.player.show = false;
         this.player.play = false;
       }
     },
@@ -136,10 +146,21 @@ export default {
     },
     onAudioEnded() {
       this.resetAudio();
+      this.$debug(
+        "Аудио закончилось для " + this.speaker.name.eng + ", плеер ресетнут",
+        "warning"
+      );
       this.pause();
     },
     onChangeSpeed() {
       this.$refs.audio.playbackRate = this.player.speed;
+      this.$debug(
+        "Изменена скорость аудио для " +
+          this.speaker.name.eng +
+          ", текущая скорость: " +
+          this.player.speed,
+        "warning"
+      );
     },
     play() {
       this.$root.$emit("stopAnotherSpeakers", this.speaker.id);

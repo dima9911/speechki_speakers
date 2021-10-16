@@ -2,6 +2,8 @@ import Vue from "vue";
 import Antd from "ant-design-vue";
 import App from "./App";
 import "ant-design-vue/dist/antd.css";
+import "vue2-animate/dist/vue2-animate.min.css";
+
 Vue.config.productionTip = false;
 
 import axios from "axios";

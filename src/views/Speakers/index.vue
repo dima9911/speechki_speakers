@@ -23,7 +23,6 @@
           label-in-value
           placeholder="Select language"
           :filter-option="filterOption"
-          _change="handleChange"
         >
           <a-select-option v-for="lang in langsList" :key="lang">
             {{ lang }}
@@ -32,13 +31,15 @@
       </div>
       <div class="voice-cards-con">
         <div class="voice-cards">
-          <Speaker
-            v-for="speaker in filteredSpeakersList"
-            :key="speaker.id"
-            v-show="speaker.show || speaker.show === undefined"
-            :speeds-list="speedsList"
-            :speaker="speaker"
-          />
+          <transition-group name="fade" tag="div" class="flex" :duration="300">
+            <Speaker
+              v-for="speaker in filteredSpeakersList"
+              :key="speaker.id"
+              v-show="speaker.show || speaker.show === undefined"
+              :speeds-list="speedsList"
+              :speaker="speaker"
+            />
+          </transition-group>
         </div>
       </div>
       <a-empty v-if="speakersList.length === 0" />
@@ -115,6 +116,15 @@ export default {
         }
         return speaker;
       });
+    },
+  },
+  watch: {
+    selectedLangs(langs) {
+      this.$debug(
+        "Был изменен список выбранных языков",
+        "warning",
+        JSON.stringify(langs)
+      );
     },
   },
   created() {

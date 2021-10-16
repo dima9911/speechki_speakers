@@ -23,8 +23,9 @@ const router = new VueRouter({
 
 router.afterEach((to) => {
   Vue.nextTick(() => {
-    document.title =
-      to.meta.title + " | Speechkit" ? to.meta.title : "Загрузка | Speechkit";
+    document.title = to.meta.title
+      ? to.meta.title + " | Speechkit"
+      : "Загрузка | Speechkit";
   });
 });
 
