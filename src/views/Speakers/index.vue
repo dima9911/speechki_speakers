@@ -1,46 +1,49 @@
 <template>
-  <div class="section-samples">
-    <div class="title--line">
-      <h2 class="section-title">
-        Choose one of
-        {{ filteredSpeakersLength }}
-        voices in
-        <span v-if="selectedLangs.length > 0"
-          >selected {{ selectedLangs.length }}
-        </span>
-        <span v-else>{{ langsList.length }} </span>
-        languages
-      </h2>
+  <a-spin :spinning="loading">
+    <div class="section-samples">
+      <div class="title--line">
+        <h2 class="section-title">
+          Choose one of
+          {{ filteredSpeakersLength }}
+          voices in
+          <span v-if="selectedLangs.length > 0"
+            >selected {{ selectedLangs.length }}
+          </span>
+          <span v-else>{{ langsList.length }} </span>
+          languages
+        </h2>
 
-      <a-select
-        size="large"
-        class="lang-select"
-        v-model="selectedLangs"
-        mode="multiple"
-        :maxTagCount="1"
-        show-search
-        label-in-value
-        placeholder="Select language"
-        :filter-option="filterOption"
-        _change="handleChange"
-      >
-        <a-select-option v-for="lang in langsList" :key="lang">
-          {{ lang }}
-        </a-select-option>
-      </a-select>
-    </div>
-    <div class="voice-cards-con">
-      <div class="voice-cards">
-        <Speaker
-          v-for="speaker in filteredSpeakersList"
-          :key="speaker.id"
-          v-show="speaker.show || speaker.show === undefined"
-          :speeds-list="speedsList"
-          :speaker="speaker"
-        />
+        <a-select
+          size="large"
+          class="lang-select"
+          v-model="selectedLangs"
+          mode="multiple"
+          :maxTagCount="1"
+          show-search
+          label-in-value
+          placeholder="Select language"
+          :filter-option="filterOption"
+          _change="handleChange"
+        >
+          <a-select-option v-for="lang in langsList" :key="lang">
+            {{ lang }}
+          </a-select-option>
+        </a-select>
       </div>
+      <div class="voice-cards-con">
+        <div class="voice-cards">
+          <Speaker
+            v-for="speaker in filteredSpeakersList"
+            :key="speaker.id"
+            v-show="speaker.show || speaker.show === undefined"
+            :speeds-list="speedsList"
+            :speaker="speaker"
+          />
+        </div>
+      </div>
+      <a-empty v-if="speakersList.length === 0" />
     </div>
-  </div>
+  </a-spin>
 </template>
 
 <script>
@@ -56,6 +59,7 @@ export default {
     return {
       speakersList: [],
       pagination: undefined,
+      loading: false,
       selectedLangs: [],
       speedsList: [
         {
@@ -128,8 +132,10 @@ export default {
       );
     },
     getData() {
+      this.loading = true;
       this.$api({
-        url: "/api/v1/speakers/",
+        // url: "/api/v1/speakers/", //proxy version
+        url: "https://api.books.speechkit.ru/api/v1/speakers/",
         method: "GET",
       })
         .then((response) => {
@@ -143,6 +149,9 @@ export default {
         })
         .catch((error) => {
           this.$debug("Произошла ошибка загрузки спикеров!", "error", error);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
   },
