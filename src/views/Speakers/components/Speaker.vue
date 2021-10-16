@@ -2,7 +2,7 @@
   <div
     class="voice-card"
     data-value="English (US)"
-    @mouseleave="player.show = false"
+    @mouseleave="!player.play ? (player.show = false) : false"
     :style="{
       background: linearGradient,
     }"
