@@ -31,12 +31,11 @@
       </div>
       <div class="voice-cards-con">
         <div class="voice-cards">
-          <transition-group name="fade" tag="div" class="flex" :duration="300">
+          <transition-group name="slideRight" tag="div" class="flex">
             <Speaker
               v-for="speaker in filteredSpeakersList"
               :key="speaker.id"
               v-show="speaker.show || speaker.show === undefined"
-              :speeds-list="speedsList"
               :speaker="speaker"
             />
           </transition-group>
@@ -49,7 +48,7 @@
 
 <script>
 import "./assets/scss/styles.scss";
-import Speaker from "./components/Speaker";
+import Speaker from "./components/Speaker/index";
 
 export default {
   name: "Speakers",
@@ -84,6 +83,11 @@ export default {
           value: 1.5,
         },
       ],
+    };
+  },
+  provide() {
+    return {
+      speedsList: this.speedsList,
     };
   },
   computed: {
